@@ -93,8 +93,6 @@
       border-radius: 999px;
       font-size: 12px;
       cursor:pointer;
-      user-select:none;
-      transition: border-color .15s ease, background .15s ease;
     }
 
     .btn.primary{
@@ -135,19 +133,6 @@
 
     .body{
       padding:10px;
-    }
-
-    .frame{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      background: #0a1411;
-      padding: 10px;
-    }
-
-    .canvas{
-      border-radius: 12px;
-      overflow:hidden;
-      background:#fff;
     }
 
     iframe{ width:100%; border:0; display:block; }
@@ -191,19 +176,19 @@
 
       <div class="body">
 
-        <!-- SPFL FIXTURES -->
+        <!-- SPFL FIXTURES - DARK -->
         <div id="fixtures-spfl">
           <iframe
-            src="https://widgets.sofascore.com/embed/fixtures?eventIds=14035267,14035263,14035262,14035265,14035260,14035261&showCompetitionLogo=true&widgetTitle=Scottish+Premiership&widgetTheme=Dark"
+            src="https://widgets.sofascore.com/embed/fixtures?eventIds=14035267,14035263,14035262,14035265,14035260,14035261&showCompetitionLogo=true&widgetTitle=Scottish+Premiership&widgetTheme=dark"
             style="width:100%!important;height:798px!important;max-width:480px!important;"
             scrolling="no">
           </iframe>
         </div>
 
-        <!-- EUROPA FIXTURES -->
+        <!-- EUROPA FIXTURES - DARK -->
         <div id="fixtures-europa" style="display:none;">
           <iframe
-            src="https://widgets.sofascore.com/embed/fixtures?eventIds=15453051,15453063,15453042,15453065,15453057,15453043,15453054,15453047,15453067,15453099,15453079,15453088,15453081,15453092,15453077,15453093&showCompetitionLogo=true&widgetTitle=UEFA+Europa+League%2C+Knockout+stage&widgetTheme=Dark"
+            src="https://widgets.sofascore.com/embed/fixtures?eventIds=15453051,15453063,15453042,15453065,15453057,15453043,15453054,15453047,15453067,15453099,15453079,15453088,15453081,15453092,15453077,15453093&showCompetitionLogo=true&widgetTitle=UEFA+Europa+League%2C+Knockout+stage&widgetTheme=dark"
             style="width:100%!important;height:1438px!important;max-width:480px!important;"
             scrolling="no">
           </iframe>
@@ -216,22 +201,24 @@
     <section class="card">
       <div class="card-head">
         <div class="kicker">Standings</div>
-        <div class="card-title" id="standingsTitle">Premiership 25/26</div>
+        <div class="card-title">Competitions</div>
       </div>
 
       <div class="body">
 
+        <!-- SPFL STANDINGS (already dark capable) -->
         <div id="standings-spfl">
           <iframe
-            src="https://widgets.sofascore.com/embed/tournament/54/season/77128/standings/Premiership%2025%2F26?widgetTitle=Premiership%2025%2F26&showCompetitionLogo=true"
+            src="https://widgets.sofascore.com/embed/tournament/54/season/77128/standings/Premiership%2025%2F26?widgetTitle=Premiership%2025%2F26&showCompetitionLogo=true&widgetTheme=dark"
             style="height:803px!important;width:100%!important;"
             scrolling="no">
           </iframe>
         </div>
 
+        <!-- EUROPA STANDINGS (dark) -->
         <div id="standings-europa" style="display:none;">
           <iframe
-            src="https://widgets.sofascore.com/embed/tournament/138315/season/76984/standings/UEFA%20Europa%20League%2025%2F26?widgetTitle=UEFA%20Europa%20League%2025%2F26&showCompetitionLogo=true"
+            src="https://widgets.sofascore.com/embed/tournament/138315/season/76984/standings/UEFA%20Europa%20League%2025%2F26?widgetTitle=UEFA%20Europa%20League%2025%2F26&showCompetitionLogo=true&widgetTheme=dark"
             style="height:1763px!important;width:100%!important;"
             scrolling="no">
           </iframe>
