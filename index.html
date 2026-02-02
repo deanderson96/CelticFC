@@ -3,14 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Celtic FC — Scottish Premiership</title>
+  <title>Celtic FC — Dashboard</title>
 
   <style>
     :root{
       --bg:#07130f;
       --bg2:#06110d;
-      --panel: rgba(255,255,255,.04);
-      --border: rgba(255,255,255,.10);
       --text:#e9fff6;
       --muted:#b7d7c8;
       --shadow: 0 18px 60px rgba(0,0,0,.55);
@@ -18,7 +16,6 @@
       --max: 1280px;
 
       --celtic:#0bb36b;
-      --celtic2:#0a8f56;
     }
 
     *{ box-sizing:border-box; }
@@ -69,6 +66,14 @@
       justify-content:center;
     }
 
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background: var(--celtic);
+      box-shadow: 0 0 0 4px rgba(11,179,107,.18);
+    }
+
     h1{ margin:0; font-size: 18px; }
     .sub{ margin:6px 0 0; color: var(--muted); font-size: 13px; }
 
@@ -76,6 +81,8 @@
       display:flex;
       gap:8px;
       align-items:center;
+      flex-wrap: wrap;
+      justify-content:flex-end;
     }
 
     .btn{
@@ -86,6 +93,14 @@
       border-radius: 999px;
       font-size: 12px;
       cursor:pointer;
+      user-select:none;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .btn:hover{ border-color: rgba(255,255,255,.22); }
+
+    .btn.primary{
+      border-color: rgba(11,179,107,.45);
+      background: rgba(11,179,107,.12);
     }
 
     .grid{
@@ -98,6 +113,8 @@
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.035);
       border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
       display:flex;
       flex-direction:column;
     }
@@ -108,12 +125,15 @@
       background: rgba(0,0,0,.22);
       display:flex;
       justify-content:space-between;
+      gap:10px;
+      align-items:flex-end;
     }
 
     .kicker{
       font-size:11px;
       color: var(--muted);
       text-transform:uppercase;
+      letter-spacing:.12em;
     }
 
     .card-title{
@@ -131,6 +151,7 @@
       border-radius: 14px;
       background: #0a1411;
       padding: 10px;
+      margin: 0 auto;
     }
 
     .canvas{
@@ -149,88 +170,139 @@
 
 <body>
 <div class="wrap">
+
   <header>
     <div class="title">
-      <div class="crest"></div>
+      <div class="crest" aria-hidden="true"><span class="dot"></span></div>
       <div>
-        <h1>Celtic FC — Scottish Premiership</h1>
-        <p class="sub">Fixtures and standings dashboard</p>
+        <h1>Celtic FC — Dashboard</h1>
+        <p class="sub">Fixtures and standings</p>
       </div>
     </div>
 
-    <div class="toolbar">
-      <button class="btn" id="refreshBtn">Refresh widgets</button>
+    <!-- TOP FILTER BUTTONS -->
+    <div class="toolbar" role="tablist" aria-label="Competition filter">
+      <button class="btn primary" id="btn-spfl" type="button" onclick="setCompetition('spfl')">
+        Scottish Premiership
+      </button>
+      <button class="btn" id="btn-europa" type="button" onclick="setCompetition('europa')">
+        Europa League
+      </button>
+      <button class="btn" id="refreshBtn" type="button">Refresh widgets</button>
     </div>
   </header>
 
   <main class="grid">
 
-    <!-- FIXTURES -->
+    <!-- FIXTURES (FILTERED) -->
     <section class="card">
       <div class="card-head">
         <div>
           <div class="kicker">Fixtures</div>
-          <div class="card-title">Upcoming</div>
+          <div class="card-title" id="fixturesTitle">Scottish Premiership</div>
         </div>
       </div>
 
       <div class="body">
-        <div class="frame" style="max-width:480px;">
-          <div class="canvas">
 
-            <iframe
-              id="fixturesFrame"
-              src="https://widgets.sofascore.com/embed/fixtures?eventIds=14035267,14035263,14035262,14035265,14035260,14035261,15453051,15453063,15453042,15453065,15453057,15453043,15453054,15453047,15453067,15453099,15453079,15453088,15453081,15453092,15453077,15453093&showCompetitionLogo=true&widgetTitle=Fixtures&widgetTheme=light"
-              style="width:100%!important;height:2014px!important;max-width:480px!important;"
-              frameborder="0"
-              scrolling="no">
-            </iframe>
-
+        <!-- SPFL FIXTURES -->
+        <div id="fixtures-spfl">
+          <div class="frame" style="max-width:480px;">
+            <div class="canvas">
+              <iframe
+                id="fixturesSpflFrame"
+                src="https://widgets.sofascore.com/embed/fixtures?eventIds=14035267,14035263,14035262,14035265,14035260,14035261&showCompetitionLogo=true&widgetTitle=Scottish+Premiership&widgetTheme=light"
+                frameborder="0"
+                scrolling="no"
+                style="width:100%!important;height:798px!important;max-width:480px!important;"
+                title="Scottish Premiership Fixtures">
+              </iframe>
+            </div>
+            <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
+              Fixtures provided by <a target="_blank" href="https://sofascore.com/" style="color:#b7d7c8;">Sofascore</a>
+            </div>
           </div>
-
-          <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
-            Fixtures provided by
-            <a target="_blank" href="https://sofascore.com/" style="color:#b7d7c8;">
-              Sofascore
-            </a>
-          </div>
-
         </div>
+
+        <!-- EUROPA FIXTURES -->
+        <div id="fixtures-europa" style="display:none;">
+          <div class="frame" style="max-width:480px;">
+            <div class="canvas">
+              <iframe
+                id="fixturesEuropaFrame"
+                src="https://widgets.sofascore.com/embed/fixtures?eventIds=15453051,15453063,15453042,15453065,15453057,15453043,15453054,15453047,15453067,15453099,15453079,15453088,15453081,15453092,15453077,15453093&showCompetitionLogo=true&widgetTitle=UEFA+Europa+League%2C+Knockout+stage&widgetTheme=light"
+                frameborder="0"
+                scrolling="no"
+                style="width:100%!important;height:1438px!important;max-width:480px!important;"
+                title="Europa League Fixtures">
+              </iframe>
+            </div>
+            <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
+              Fixtures provided by <a target="_blank" href="https://sofascore.com/" style="color:#b7d7c8;">Sofascore</a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- STANDINGS -->
+    <!-- STANDINGS (FILTERED) -->
     <section class="card">
       <div class="card-head">
         <div>
           <div class="kicker">Standings</div>
-          <div class="card-title">Competitions</div>
+          <div class="card-title" id="standingsTitle">Premiership 25/26</div>
         </div>
       </div>
 
       <div class="body">
 
-        <div style="display:flex; gap:8px; margin-bottom:10px;">
-          <button class="btn" onclick="showTable('spfl')">SPFL Premiership</button>
-          <button class="btn" onclick="showTable('europa')">Europa League</button>
+        <!-- SPFL STANDINGS -->
+        <div id="standings-spfl">
+          <div class="frame" style="max-width:768px;">
+            <div class="canvas">
+              <iframe
+                id="standingsSpflFrame"
+                src="https://widgets.sofascore.com/embed/tournament/54/season/77128/standings/Premiership%2025%2F26?widgetTitle=Premiership%2025%2F26&showCompetitionLogo=true"
+                style="height:803px!important;max-width:768px!important;width:100%!important;"
+                frameborder="0"
+                scrolling="no"
+                title="SPFL Premiership Standings">
+              </iframe>
+            </div>
+            <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
+              Standings provided by
+              <a target="_blank"
+                 href="https://www.sofascore.com/football/tournament/scotland/premiership/36#id:77128"
+                 style="color:#b7d7c8;">
+                Sofascore
+              </a>
+            </div>
+          </div>
         </div>
 
-        <!-- SPFL -->
-        <div id="table-spfl">
-          <iframe
-            src="https://widgets.sofascore.com/embed/tournament/54/season/77128/standings/Premiership%2025%2F26?widgetTitle=Premiership%2025%2F26&showCompetitionLogo=true"
-            style="height:803px!important;max-width:768px!important;width:100%!important;"
-            scrolling="no">
-          </iframe>
-        </div>
-
-        <!-- EUROPA -->
-        <div id="table-europa" style="display:none;">
-          <iframe
-            src="https://widgets.sofascore.com/embed/tournament/138315/season/76984/standings/UEFA%20Europa%20League%2025%2F26?widgetTitle=UEFA%20Europa%20League%2025%2F26&showCompetitionLogo=true"
-            style="height:1763px!important;max-width:768px!important;width:100%!important;"
-            scrolling="no">
-          </iframe>
+        <!-- EUROPA STANDINGS -->
+        <div id="standings-europa" style="display:none;">
+          <div class="frame" style="max-width:768px;">
+            <div class="canvas">
+              <iframe
+                id="standingsEuropaFrame"
+                src="https://widgets.sofascore.com/embed/tournament/138315/season/76984/standings/UEFA%20Europa%20League%2025%2F26?widgetTitle=UEFA%20Europa%20League%2025%2F26&showCompetitionLogo=true"
+                style="height:1763px!important;max-width:768px!important;width:100%!important;"
+                frameborder="0"
+                scrolling="no"
+                title="UEFA Europa League Standings">
+              </iframe>
+            </div>
+            <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
+              Standings provided by
+              <a target="_blank"
+                 href="https://www.sofascore.com/football/tournament/europe/uefa-europa-league/679#id:76984"
+                 style="color:#b7d7c8;">
+                Sofascore
+              </a>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -240,19 +312,40 @@
 </div>
 
 <script>
-  function showTable(which){
-    document.getElementById("table-spfl").style.display =
-      which === "spfl" ? "block" : "none";
+  function setCompetition(which){
+    // Toggle fixtures
+    document.getElementById("fixtures-spfl").style.display  = (which === "spfl") ? "block" : "none";
+    document.getElementById("fixtures-europa").style.display = (which === "europa") ? "block" : "none";
 
-    document.getElementById("table-europa").style.display =
-      which === "europa" ? "block" : "none";
+    // Toggle standings
+    document.getElementById("standings-spfl").style.display  = (which === "spfl") ? "block" : "none";
+    document.getElementById("standings-europa").style.display = (which === "europa") ? "block" : "none";
+
+    // Update titles
+    document.getElementById("fixturesTitle").textContent = (which === "spfl")
+      ? "Scottish Premiership"
+      : "UEFA Europa League — Knockout stage";
+
+    document.getElementById("standingsTitle").textContent = (which === "spfl")
+      ? "Premiership 25/26"
+      : "UEFA Europa League 25/26";
+
+    // Button styles
+    document.getElementById("btn-spfl").classList.toggle("primary", which === "spfl");
+    document.getElementById("btn-europa").classList.toggle("primary", which === "europa");
+
+    // Update URL hash (nice for bookmarking / refreshing)
+    location.hash = which;
   }
 
+  // Optional manual refresh
   document.getElementById("refreshBtn").addEventListener("click", () => {
     location.reload();
   });
 
-  showTable("spfl");
+  // Load from hash if present
+  const initial = (location.hash.replace("#","") === "europa") ? "europa" : "spfl";
+  setCompetition(initial);
 </script>
 
 </body>
