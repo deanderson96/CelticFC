@@ -1,10 +1,377 @@
-<section class="card">
-  <h2>League Table</h2>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Celtic FC — Scottish Premiership</title>
 
-  <!-- Paste your SofaScore standings widget embed code here -->
-  <div class="embed">
-    <!-- Example pattern:
-    <iframe src="SOFASCORE_WIDGET_URL" loading="lazy"></iframe>
-    -->
-  </div>
-</section>
+  <style>
+    :root{
+      --bg:#07130f;
+      --bg2:#06110d;
+      --panel: rgba(255,255,255,.04);
+      --border: rgba(255,255,255,.10);
+      --text:#e9fff6;
+      --muted:#b7d7c8;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 16px;
+      --max: 1280px;
+
+      --celtic:#0bb36b;
+      --celtic2:#0a8f56;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 520px at 12% 10%, rgba(11,179,107,.22), transparent 60%),
+        radial-gradient(900px 520px at 88% 18%, rgba(0,255,163,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      color: var(--text);
+    }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 16px;
+      min-height: 100%;
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap: wrap;
+    }
+
+    .title{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .crest{
+      width:42px;
+      height:42px;
+      border-radius: 12px;
+      border: 1px solid rgba(11,179,107,.35);
+      background: rgba(11,179,107,.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    h1{ margin:0; font-size: 18px; }
+    .sub{ margin:6px 0 0; color: var(--muted); font-size: 13px; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid rgba(11,179,107,.35);
+      border-radius:999px;
+      background: rgba(11,179,107,.10);
+      color: var(--muted);
+      font-size: 12px;
+      user-select:none;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background: var(--celtic);
+      box-shadow: 0 0 0 4px rgba(11,179,107,.18);
+    }
+
+    .toolbar{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding:8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor:pointer;
+    }
+    .btn:hover{ border-color: rgba(255,255,255,.22); }
+
+    .grid{
+      flex:1;
+      min-height:0;
+      display:grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap:12px;
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-head{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.22);
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .kicker{
+      font-size:11px;
+      color: var(--muted);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .card-title{
+      font-size:13px;
+      font-weight:700;
+      margin-top:2px;
+    }
+
+    .meta{
+      font-size: 11px;
+      color: var(--muted);
+      opacity:.9;
+      text-align:right;
+      white-space:nowrap;
+    }
+
+    .body{
+      padding:10px;
+      overflow:auto;
+      min-height:0;
+    }
+
+    .frame{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      background: #0a1411;
+      padding: 10px;
+      margin: 0 auto;
+    }
+
+    .canvas{
+      border-radius: 12px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    iframe{ width:100%; border:0; display:block; }
+
+    /* keep your original viewport behavior */
+    .fixtures .body,
+    .standings .body{
+      max-height: calc(100vh - 170px);
+    }
+
+    /* heights (fallback) */
+    .h-fixtures{ height:798px !important; max-width:480px !important; width:100% !important; }
+    .h-standings-spfl{ height:803px !important; max-width:768px !important; width:100% !important; }
+    .h-standings-europa{ height:1763px !important; max-width:768px !important; width:100% !important; }
+
+    @media (max-width: 980px){
+      .wrap{ height:auto; }
+      .grid{ grid-template-columns: 1fr; }
+      .fixtures .body,
+      .standings .body{ max-height:none; }
+      .meta{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="title">
+      <div class="crest" aria-hidden="true">
+        <span class="dot"></span>
+      </div>
+      <div>
+        <h1>Celtic FC — Scottish Premiership</h1>
+        <p class="sub">Fixtures and standings dashboard</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div id="statusBadge" class="badge" data-state="idle" title="Manual for now">
+        <span class="dot"></span>
+        <span id="statusText">No match live</span>
+      </div>
+      <button class="btn" id="refreshBtn" type="button">Refresh widgets</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- FIXTURES -->
+    <section class="card fixtures">
+      <div class="card-head">
+        <div>
+          <div class="kicker">Fixtures</div>
+          <div class="card-title">Scottish Premiership</div>
+        </div>
+        <div class="meta" id="updatedAt">Updated: —</div>
+      </div>
+
+      <div class="body">
+        <div class="frame" style="max-width:480px;">
+          <div class="canvas">
+            <iframe
+              id="fixturesFrame"
+              src="https://widgets.sofascore.com/embed/fixtures?eventIds=14035256,14035272,14035273,14035257,14035258,14035264&showCompetitionLogo=true&widgetTitle=Scottish+Premiership&widgetTheme=dark"
+              class="h-fixtures"
+              scrolling="no"
+              title="Fixtures widget">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STANDINGS -->
+    <section class="card standings">
+      <div class="card-head">
+        <div>
+          <div class="kicker">Standings</div>
+          <div class="card-title">SPFL & Europa League</div>
+        </div>
+        <div class="meta">Auto-updates via SofaScore</div>
+      </div>
+
+      <div class="body">
+        <!-- Tabs -->
+        <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+          <button class="btn" type="button" onclick="showTable('spfl')">SPFL Premiership</button>
+          <button class="btn" type="button" onclick="showTable('europa')">Europa League</button>
+        </div>
+
+        <!-- SPFL -->
+        <div id="table-spfl">
+          <div class="frame" style="max-width:768px;">
+            <div class="canvas">
+              <iframe
+                id="spflFrame"
+                src="https://widgets.sofascore.com/embed/tournament/54/season/77128/standings/Premiership%2025%2F26?widgetTitle=Premiership%2025%2F26&showCompetitionLogo=true"
+                class="h-standings-spfl"
+                frameborder="0"
+                scrolling="no"
+                title="SPFL Premiership Standings">
+              </iframe>
+            </div>
+
+            <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
+              Standings provided by
+              <a target="_blank"
+                 href="https://www.sofascore.com/football/tournament/scotland/premiership/36#id:77128"
+                 style="color:#b7d7c8;">
+                Sofascore
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- EUROPA -->
+        <div id="table-europa" style="display:none;">
+          <div class="frame" style="max-width:768px;">
+            <div class="canvas">
+              <iframe
+                id="europaFrame"
+                src="https://widgets.sofascore.com/embed/tournament/138315/season/76984/standings/UEFA%20Europa%20League%2025%2F26?widgetTitle=UEFA%20Europa%20League%2025%2F26&showCompetitionLogo=true"
+                class="h-standings-europa"
+                frameborder="0"
+                scrolling="no"
+                title="UEFA Europa League Standings">
+              </iframe>
+            </div>
+
+            <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left;margin-top:6px;">
+              Standings provided by
+              <a target="_blank"
+                 href="https://www.sofascore.com/football/tournament/europe/uefa-europa-league/679#id:76984"
+                 style="color:#b7d7c8;">
+                Sofascore
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Cache-busting refresh for iframes
+  function bust(url){
+    const u = new URL(url, window.location.href);
+    u.searchParams.set("_t", Date.now().toString());
+    return u.toString();
+  }
+
+  function refreshFrames(){
+    const fixtures = document.getElementById("fixturesFrame");
+    const spfl = document.getElementById("spflFrame");
+    const europa = document.getElementById("europaFrame");
+
+    if (fixtures?.src) fixtures.src = bust(fixtures.src);
+    if (spfl?.src) spfl.src = bust(spfl.src);
+    if (europa?.src) europa.src = bust(europa.src);
+
+    const updatedAt = document.getElementById("updatedAt");
+    if (updatedAt) updatedAt.textContent = "Updated: " + new Date().toLocaleString();
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", refreshFrames);
+
+  // Tabs
+  function showTable(which){
+    document.getElementById("table-spfl").style.display = (which === "spfl") ? "block" : "none";
+    document.getElementById("table-europa").style.display = (which === "europa") ? "block" : "none";
+  }
+
+  // Optional: manual status indicator hook
+  function setStatus(isLive, text){
+    const badge = document.getElementById("statusBadge");
+    const statusText = document.getElementById("statusText");
+    if (!badge || !statusText) return;
+
+    badge.style.borderColor = isLive ? "rgba(11,179,107,.45)" : "rgba(255,255,255,.16)";
+    badge.style.background = isLive ? "rgba(11,179,107,.12)" : "rgba(255,255,255,.05)";
+    statusText.textContent = text || (isLive ? "Match live" : "No match live");
+  }
+
+  // initial
+  refreshFrames();
+  showTable("spfl");
+  setStatus(false, "No match live");
+</script>
+</body>
+</html>
