@@ -67,31 +67,10 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
 
     h1{ margin:0; font-size: 18px; }
     .sub{ margin:6px 0 0; color: var(--muted); font-size: 13px; }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border:1px solid rgba(11,179,107,.35);
-      border-radius:999px;
-      background: rgba(11,179,107,.10);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background: var(--celtic);
-      box-shadow: 0 0 0 4px rgba(11,179,107,.18);
-    }
 
     .toolbar{
       display:flex;
@@ -172,7 +151,7 @@
 <div class="wrap">
   <header>
     <div class="title">
-      <div class="crest"><span class="dot"></span></div>
+      <div class="crest"></div>
       <div>
         <h1>Celtic FC — Scottish Premiership</h1>
         <p class="sub">Fixtures and standings dashboard</p>
@@ -186,7 +165,7 @@
 
   <main class="grid">
 
-    <!-- UPDATED FIXTURES -->
+    <!-- FIXTURES -->
     <section class="card">
       <div class="card-head">
         <div>
